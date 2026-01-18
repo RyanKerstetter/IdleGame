@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Idle Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="ui-root">
+
+    <div id="top-bar">
+        <div class="box" id="settings-box">
+            <h3>Settings</h3>
+        </div>
+
+        <div class="box" id="title-box">
+            <h1>Idle Game</h1>
+        </div>
+    </div>
+
+    <div id="main-area">
+        <div class="column">
+            <div class="box">
+                <h3>Left Box</h3>
+                <p>Future content</p>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="box">
+                <h3>Stats</h3>
+                <div>Mana: <span id="mana">0</span></div>
+                <div>Mana / sec: <span id="mps">0</span></div>
+                <button id="clickBtn">Gain Mana</button>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="box" id="upgrade-tabs"></div>
+            <div id="upgrade-panels"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

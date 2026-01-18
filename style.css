@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    background: #111;
+    color: #eee;
+    font-family: Arial, sans-serif;
+}
+
+#ui-root {
+    padding: 10px;
+}
+
+#top-bar {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#settings-box {
+    width: 150px;
+    height: 40px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#settings-box h3 {
+    margin: 0;
+}
+
+#upgrade-tabs {
+    display: flex;
+}
+
+#upgrade-tabs .tab {
+    flex: 1;
+    height: 40px;
+    background: #222;
+    border: 1px solid #444;
+    color: #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#upgrade-tabs .tab.active {
+    background: #555;      /* brighter */
+    border-color: #888;    /* highlighted */
+    font-weight: bold;     /* obvious */
+}
+
+#upgrade-tabs .tab:hover {
+    background: #333;
+}
+
+.upgrade-panel {
+    display: none; /* hidden by default */
+}
+
+.upgrade-panel.active {
+    display: block; /* only visible when active */
+}
+
+#title-box {
+    flex: 1;
+    height: 40px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#title-box h1 {
+    margin: 0;
+}
+
+#main-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.column {
+    flex: 1;
+}
+
+.box {
+    border: 1px solid #444;
+    padding: 10px;
+    background: #181818;
+}
+
+h1, h3 {
+    margin-top: 0;
+}
+
+button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 6px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #444;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #333;
+}
