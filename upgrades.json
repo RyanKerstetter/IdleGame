@@ -5,30 +5,28 @@
       "name": "Tier I",
       "upgrades": [
         { "id" : "t1_condense","name": "T1 Condense","description" : "Every cycle gives one additional mana",
-        "cost": 10, "scale" : 1.2,"max_upgrades":50 },
+        "cost": 10, "cost_resource" : "mana", "scale" : 1.2,"max_upgrades":50 },
         { "id" : "t1_circulate","name": "T1 Circulate","description" : "Every cycle takes less time",
-        "cost": 50, "scale" : 1.3,"max_upgrades":50 },
+        "cost": 50, "cost_resource" : "mana", "scale" : 1.3,"max_upgrades":50 },
         { "id" : "t2_core_create","name": "T2 Core Creation","description" : "Condense and Circulate mana to build a T2 mana core",
-        "cost": 1000000000, "scale" : 1,"max_upgrades":1,
-        "requirements" : [ { "name" : "T1 Condense", "amount" : 25} , { "name" : "T1 Circulate", "amount" : 25} ] }
+        "cost": 1000000000, "cost_resource" : "mana", "scale" : 1,"max_upgrades":1,
+        "requirements" : [ { "id" : "t2_core_research", "amount" : 1} ] }
       ],
       "research": [
-        { "id" : "t1_reinforce","name": "Reinforce","description" : "Double mana per cycle", "cost": 20 },
-        { "name": "Haste","description" : "Half the time per cycle", "cost": 200 },
-        { "name": "Efficiency","description" : "Reduce the cost of Condense by 3", 
+        { "id" : "t1_reinforce","name": "Reinforce","description" : "Double mana per cycle", "cost": 20, "cost_resource" : "research" },
+        { "id" : "t1_haste","name": "Haste","description" : "Half the time per cycle", "cost": 200 },
+        { "id" : "t1_condense_efficiency","name": "Condense Efficiency","description" : "Reduce the cost of Condense by 3", 
         "cost": 20,"scale":10,"max_upgrades":10 },
-        { "name": "Efficiency","description" : "Reduce the cost of Condense by 3", 
+        { "id" : "circulate_efficiency","name": "Circulate Efficiency","description" : "Reduce the cost of Circulate by 3", 
         "cost": 20,"scale":10,"max_upgrades":10 },
-        { "name": "T2 Core","description" : "Learn the method to create a T2 core", 
+        { "id" : "t2_core_research","name": "T2 Core","description" : "Learn the method to create a T2 core", 
         "cost": 1000000,"scale":1,"max_upgrades":1 }
       ]
     },
     {
       "id": 2,
       "name": "Tier II",
-      "upgrades": [
-        
-      ]
+      "upgrades": []
     },
     {
       "id": 3,
@@ -43,6 +41,31 @@
     {
       "id": 5,
       "name": "Tier V",
+      "upgrades": []
+    },
+    {
+      "id": 6,
+      "name": "Tier VI",
+      "upgrades": []
+    },
+    {
+      "id": 7,
+      "name": "Tier VII",
+      "upgrades": []
+    },
+    {
+      "id": 8,
+      "name": "Tier VIII",
+      "upgrades": []
+    },
+    {
+      "id": 9,
+      "name": "Tier IX",
+      "upgrades": []
+    },
+    {
+      "id": 10,
+      "name": "Tier X",
       "upgrades": []
     }
   ]
