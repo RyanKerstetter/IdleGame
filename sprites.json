@@ -1,0 +1,46 @@
+[
+    {
+        "name" : "copper_coin",
+        "bounds" : {"x": 0, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "silver_coin",
+        "bounds" : {"x": 32, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "gold_coin",
+        "bounds" : {"x": 64, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "platinum_coin",
+        "bounds" : {"x": 96, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "mithril_coin",
+        "bounds" : {"x": 128, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "gray_mushroom",
+        "bounds" : {"x": 160, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "green_mushroom",
+        "bounds" : {"x": 192, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "gold_mushroom",
+        "bounds" : {"x": 224, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "pink_mushroom",
+        "bounds" : {"x": 256, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "purple_mushroom",
+        "bounds" : {"x": 288, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "black_mushroom",
+        "bounds" : {"x": 288, "y":0, "width":32, "height":32}
+    }
+]

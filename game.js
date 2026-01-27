@@ -6,10 +6,31 @@ window.GameData = {
 window.GameState = {
   mana: 0,
   research: 0,
-  manaProgress: Array(9).fill(0),
+  manaProgress: Array(10).fill(0),
   upgrades : {},
   lastTick: Date.now()
 }
+
+class UpdateManager {
+  constructor() {
+    this.updatables = [];
+  }
+
+  add(updateFn) {
+    this.updatables.push(updateFn);
+  }
+
+  remove(updateFn) {
+    this.updatables = this.updatables.filter(fn => fn !== updateFn);
+  }
+
+  tick() {
+    // run all registered update functions
+    this.updatables.forEach(fn => fn());
+  }
+}
+
+const upgradeUpdateManager = new UpdateManager();
 
 class RequirementData {
   constructor(obj){
@@ -35,7 +56,7 @@ class UpgradeData {
   }
 
   GetCost(){
-    const currentAmount = GameState.upgrades[this.name];
+    const currentAmount = getUpgradeAmount(this.id);
     const currentCost = this.cost * this.scale ** currentAmount;
     return currentCost;
   }
@@ -55,7 +76,7 @@ class UpgradeData {
     if(!this.CanAfford()){
       return false;
     }
-
+    const resourceCost = this.GetCost()
     if(this.cost_resource == "mana"){
       GameState.mana -= resourceCost;
     } else if(this.cost_resource == "research"){
@@ -64,7 +85,10 @@ class UpgradeData {
       console.log("Unidentifies resource cost buy" + this.cost_resource);
     }
 
-    GameState.upgrades[this.name] = (GameState.upgrades[this.name] ?? 0) + 1;
+    GameState.upgrades[this.id] = getUpgradeAmount(this.id) + 1;
+    console.log("New: " + this.id + " " + getUpgradeAmount(this.id))
+
+    upgradeUpdateManager.tick()
   }
 }
 
@@ -75,6 +99,13 @@ class TierData {
     this.upgrades = (obj.upgrades ?? []) . map(r => new UpgradeData(r));
     this.research = (obj.research ?? []) . map(r => new UpgradeData(r));
   }
+}
+
+function getUpgradeAmount(upgradeID){
+  if(GameState.upgrades[upgradeID] == undefined){
+    GameState.upgrades[upgradeID] = 0;
+  }
+  return GameState.upgrades[upgradeID];
 }
 
 function loadGame() {
@@ -140,40 +171,96 @@ function format(value) {
 }
 
 function createUpgradePanel(upgradeData) {
+  console.log("Creaitng upgrade panel: " + upgradeData.name)
   const root = document.createElement("div");
   root.className = "upgradeButton";
 
-  const name = document.createElement("h1");
+  const text = document.createElement("div");
+  text.className = "upgradeText"
+  const name = document.createElement("h3")
   name.innerText = upgradeData.name;
+  const description = document.createElement("p")
+  description.innerText = upgradeData.description;
+  text.appendChild(name);
+  text.appendChild(description);
 
-  const cost = document.createElement("h3");
-  cost.innerText = upgradeData.cost;
+  const cost = document.createElement("div");
+  cost.className = "upgradeCost"
+  const costAmount = document.createElement("h3");
+  costAmount.innerText = format(upgradeData.GetCost()) + " " + upgradeData.cost_resource;
+  costAmount.id = "costAmount"
+  const owned = document.createElement("p");
+  owned.innerText = getUpgradeAmount(upgradeData.id) + " Owned";
+  owned.id = "ownedAmount";
+  cost.appendChild(costAmount)
+  cost.appendChild(owned)
 
-  root.appendChild(name);
+  
+
+
+  root.appendChild(text);
   root.appendChild(cost);
 
-  root.addEventListener("click", (e) => {
+  cost.addEventListener("click", (e) => {
+    console.log("Button Clicked:" + upgradeData.name);
     upgradeData.Buy();
+    owned.innerText = getUpgradeAmount(upgradeData.id) + " Owned";
+    costAmount.innerText = format(upgradeData.GetCost()) + " " + upgradeData.cost_resource;
+    
   })
 
   return root;
 }
 
-
-
 function generateManaBars() {
   manaBarsEl.innerHTML = "";
 
   GameState.manaProgress.forEach((_, i) => {
+    console.log(i)
+    const container = document.createElement("div")
+    container.className = "box"
+
+    const text = document.createElement("h3")
+    text.innerText = "Tier " + toRoman(i+1) + " Core"
+    container.appendChild(text)
+
+    const content = document.createElement("div")
+
     const bar = document.createElement("div");
     bar.className = "mana-bar";
 
     const fill = document.createElement("div");
     fill.className = "mana-bar-fill";
     fill.dataset.index = i;
-
     bar.appendChild(fill);
-    manaBarsEl.appendChild(bar);
+
+    const stats = document.createElement("p");
+    stats.innerText = computeManaCoreAmountMultiplier(i) + " mana";
+    
+    content.appendChild(stats);
+    content.appendChild(bar)
+
+    container.appendChild(content)
+
+    upgradeUpdateManager.add(() => {
+      console.log("Update received")
+      stats.innerText = computeManaCoreAmountMultiplier(i) + " mana";
+    })
+    
+    
+    manaBarsEl.appendChild(container);
+  });
+}
+
+function loadSidebar(){
+  document.querySelectorAll(".sidebarButton").forEach((t) => {
+    t.addEventListener("click",(e) => {
+      document.querySelectorAll(".panel").forEach((y) => y.classList.remove("active"))
+      document.querySelectorAll(".panel").forEach((y) => y.classList.hidden("hidden"))
+      const id = "#upgrade-panel-" + t.innerText;
+      console.log(id);
+      document.querySelector(id).classList.add("active")
+    })
   });
 }
 
@@ -189,7 +276,7 @@ function generateUpgradeUI() {
   upgradeTiers.forEach((tier, index) => {
     // Create tab
     const tab = document.createElement("button");
-    tab.className = "tab" + (index === 0 ? " active" : "");
+    tab.className = "tab" + (index === 0 ? " selected" : "");
     tab.textContent = toRoman(tier.id);
     tab.dataset.tab = tier.id;
     if(index != 0)
@@ -198,8 +285,9 @@ function generateUpgradeUI() {
 
     // Create panel
     const panel = document.createElement("div");
-    panel.className = "box upgrade-panel" + (index === 0 ? " active" : "");
+    panel.className = "box .upgrade-panel " + (index === 0 ? "active" : "hidden");
     panel.dataset.panel = tier.id;
+    panel.id = "upgrade-panel-" + tier.id;
 
     const title = document.createElement("h3");
     title.textContent = tier.name;
@@ -248,11 +336,13 @@ function generateUpgradeUI() {
         return;
     }
 
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("selected"));
     document.querySelectorAll(".upgrade-panel").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".upgrade-panel").forEach(p => p.classList.add("hidden"));
 
-    e.target.classList.add("active");
-    document.querySelector(`.upgrade-panel[data-panel="${id}"]`).classList.add("active");
+    e.target.classList.add("selected");
+    document.querySelector("#upgrade-panel-" + id).classList.remove("hidden");
+    document.querySelector("#upgrade-panel-" + id).classList.add("active");
   });
 }
 
@@ -260,7 +350,7 @@ function gameLoop(time) {
     const delta = (time - lastTime) / 1000;
     lastTime = time;
 
-    updateText();
+    updateUI();
     handleTimeDelta(delta);
 
     requestAnimationFrame(gameLoop);
@@ -268,7 +358,17 @@ function gameLoop(time) {
 
 requestAnimationFrame(gameLoop);
 
-function updateText(){
+function computeManaCoreTimeMultiplier(i){
+  const circulateID = `t${i+1}_circulate`
+  return 0.2 / (i + 1) * (getUpgradeAmount(circulateID)+1)
+}
+
+function computeManaCoreAmountMultiplier(i){
+  const condenseID = `t${i+1}_condense`
+  return 10 ** i * (getUpgradeAmount(condenseID) + 1);
+}
+
+function updateUI(){
   manaEl.textContent = format(Math.floor(GameState.mana));
 
   updateManaBars();
@@ -292,18 +392,16 @@ function handleTimeDelta(delta){
         continue;
       }
 
-
-      GameState.manaProgress[i] += currentDelta * 0.2 / (i + 1);
+      GameState.manaProgress[i] += currentDelta * computeManaCoreTimeMultiplier(i)
 
       if(GameState.manaProgress[i] >= 1){
         const amount = Math.floor(GameState.manaProgress[i]);
-        GameState.mana += 10 ** i * amount;
+        GameState.mana += amount * computeManaCoreAmountMultiplier(i);
         GameState.manaProgress[i] -= amount;
       }
     }
   }
 }
-
 
 function toRoman(num) {
     const roman = [

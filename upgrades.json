@@ -5,8 +5,35 @@
       "name": "Tier I",
       "upgrades": [
         { "id" : "t1_condense","name": "T1 Condense","description" : "Every cycle gives one additional mana",
-        "cost": 10, "cost_resource" : "mana", "scale" : 1.2,"max_upgrades":50 },
+        "cost": 5, "cost_resource" : "mana", "scale" : 1.2,"max_upgrades":50 },
         { "id" : "t1_circulate","name": "T1 Circulate","description" : "Every cycle takes less time",
+        "cost": 50, "cost_resource" : "mana", "scale" : 1.3,"max_upgrades":50 },
+        { "id" : "t1_capacity","name": "T1 Capacity","description" : "Increase the size of the core generating more per cycle but increasing cycle time",
+        "cost": 100, "cost_resource" : "mana", "scale" : 1.5,"max_upgrades":50 },
+        { "id" : "t2_core_create","name": "T2 Core Creation","description" : "Condense and Circulate mana to build a T2 mana core",
+        "cost": 1000000000, "cost_resource" : "mana", "scale" : 1,"max_upgrades":1,
+        "requirements" : [ { "id" : "t2_core_research", "amount" : 1} ] }
+      ],
+      "research": [
+        { "id" : "t1_reinforce","name": "Reinforce","description" : "Double mana per cycle", "cost": 20, "cost_resource" : "research" },
+        { "id" : "t1_haste","name": "Haste","description" : "Half the time per cycle", "cost": 200, "cost_resource" : "research" },
+        { "id" : "t1_condense_efficiency","name": "Condense Efficiency","description" : "Reduce the cost of Condense by 3", 
+        "cost": 20,"scale":10,"max_upgrades":10, "cost_resource" : "research" },
+        { "id" : "circulate_efficiency","name": "Circulate Efficiency","description" : "Reduce the cost of Circulate by 3", 
+        "cost": 20,"scale":10,"max_upgrades":10, "cost_resource" : "research" },
+        { "id" : "t2_core_research","name": "T2 Core","description" : "Learn the method to create a T2 core", 
+        "cost": 1000000,"scale":1,"max_upgrades":1, "cost_resource" : "research" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Tier II",
+      "upgrades": [
+        { "id" : "t1_condense","name": "T1 Condense","description" : "Every cycle gives one additional mana",
+        "cost": 5, "cost_resource" : "mana", "scale" : 1.2,"max_upgrades":50 },
+        { "id" : "t1_circulate","name": "T1 Circulate","description" : "Every cycle takes less time",
+        "cost": 50, "cost_resource" : "mana", "scale" : 1.3,"max_upgrades":50 },
+        { "id" : "t1_capacity","name": "T1 Capacity","description" : "Increase the size of the core generating more per cycle but increasing cycle time",
         "cost": 50, "cost_resource" : "mana", "scale" : 1.3,"max_upgrades":50 },
         { "id" : "t2_core_create","name": "T2 Core Creation","description" : "Condense and Circulate mana to build a T2 mana core",
         "cost": 1000000000, "cost_resource" : "mana", "scale" : 1,"max_upgrades":1,
@@ -14,19 +41,14 @@
       ],
       "research": [
         { "id" : "t1_reinforce","name": "Reinforce","description" : "Double mana per cycle", "cost": 20, "cost_resource" : "research" },
-        { "id" : "t1_haste","name": "Haste","description" : "Half the time per cycle", "cost": 200 },
+        { "id" : "t1_haste","name": "Haste","description" : "Half the time per cycle", "cost": 200, "cost_resource" : "research" },
         { "id" : "t1_condense_efficiency","name": "Condense Efficiency","description" : "Reduce the cost of Condense by 3", 
-        "cost": 20,"scale":10,"max_upgrades":10 },
+        "cost": 20,"scale":10,"max_upgrades":10, "cost_resource" : "research" },
         { "id" : "circulate_efficiency","name": "Circulate Efficiency","description" : "Reduce the cost of Circulate by 3", 
-        "cost": 20,"scale":10,"max_upgrades":10 },
+        "cost": 20,"scale":10,"max_upgrades":10, "cost_resource" : "research" },
         { "id" : "t2_core_research","name": "T2 Core","description" : "Learn the method to create a T2 core", 
-        "cost": 1000000,"scale":1,"max_upgrades":1 }
+        "cost": 1000000,"scale":1,"max_upgrades":1, "cost_resource" : "research" }
       ]
-    },
-    {
-      "id": 2,
-      "name": "Tier II",
-      "upgrades": []
     },
     {
       "id": 3,

@@ -3,6 +3,7 @@ body {
     background: #111;
     color: #eee;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 #ui-root {
@@ -42,22 +43,37 @@ body {
     transition: background 0.2s;
 }
 
-#upgrade-tabs .tab.active {
+#upgrade-tabs .tab.selected {
     background: #555;      /* brighter */
     border-color: #888;    /* highlighted */
     font-weight: bold;     /* obvious */
+    display: block;
 }
 
 #upgrade-tabs .tab:hover {
     background: #333;
 }
 
-.upgrade-panel {
-    display: none; /* hidden by default */
+.panel {
+    width: 80%;
+    display: flex;
+    height: calc(100vh - 60px);
 }
 
-.upgrade-panel.active {
-    display: block; /* only visible when active */
+
+.hidden {
+    display: none;
+}
+
+
+.scroll-box {
+  height: 90%;        /* fixed height */
+  overflow-y: auto;     /* vertical scroll only */
+}
+
+#manaPanel {
+    display: flex;
+
 }
 
 #title-box {
@@ -74,9 +90,29 @@ body {
 }
 
 #main-area {
-    display: flex;
     gap: 10px;
     margin-top: 10px;
+    display: flex;
+}
+
+#sidebar {
+    width: 10%
+}
+
+.sidebarButton {
+    width: 100%;
+    margin-top: 5px;
+    padding: 6px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #444;
+    cursor: pointer;
+
+    display: flex;
+}
+
+.upgradeCost:hover {
+    background: #333;
 }
 
 .column {
@@ -89,10 +125,6 @@ body {
     background: #181818;
 }
 
-h1, h3 {
-    margin-top: 0;
-}
-
 .upgradeButton {
     width: 100%;
     margin-top: 5px;
@@ -100,19 +132,48 @@ h1, h3 {
     background: #222;
     color: #eee;
     border: 1px solid #444;
-    cursor: pointer;
+    
+    display: flex;
 }
 
-.upgradeButton:hover {
+.upgradeCost:hover {
     background: #333;
 }
 
+.upgradeText {
+    width: 60%;
+}
+
+.upgradeCost {
+    border: 1px solid #444;
+    padding: 10px;
+    background: #181818;
+    justify-content: center; /* horizontal */
+    align-items: center;     /* vertical */
+    cursor: pointer;
+    width: 40%;
+}
+
+#costAmount {
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+#ownedAmount {
+    margin-top: 0px;
+    text-align: center;
+}
+
 .mana-bar {
-  width: 200px;
-  height: 18px;
+  width: 300px;
+  height: 30px;
   border: 1px solid #aaa;
   margin: 4px 0;
   background: #111;
+}
+
+.mana-bar-data {
+  display: flex;
 }
 
 .mana-bar-fill {
@@ -120,4 +181,38 @@ h1, h3 {
   width: 0%;
   background: #3af;
   transition: width 0.1s linear;
+}
+
+
+h1,h2, h3 {
+    margin: 0px;
+    margin-bottom: 20px;
+}
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+.scroll-box::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scroll-box::-webkit-scrollbar-track {
+  background: #111; /* track color */
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+  background: #444; /* scrollbar color */
+  border-radius: 6px;
+}
+
+.scroll-box::-webkit-scrollbar-thumb:hover {
+  background: #111; /* hover color */
+}
+
+.scroll-box {
+  scrollbar-width: thin;
+  scrollbar-color: #444 #111;
 }
