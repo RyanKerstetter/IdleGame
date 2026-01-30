@@ -6,7 +6,7 @@ window.GameData = {
 window.GameState = {
   mana: 0,
   research: 0,
-  manaProgress: Array(10).fill(0),
+  manaProgress: 0,
   upgrades : {},
   lastTick: Date.now()
 }
@@ -34,12 +34,16 @@ const upgradeUpdateManager = new UpdateManager();
 
 class RequirementData {
   constructor(obj){
-    this.name = obj.name;
+    console.log("Creating requirementData from:");
+    console.log(JSON.stringify(obj, null, 2));
+    this.id = obj.id;
     this.amount  = obj.amount;
+    console.log("Id:" + this.id + " amount:" + this.amount);
   }
 
   Check(){
-    return GameState.upgrades[this.name] >= this.amount;
+    console.log("Checking : " + this.name + " for amount: " + this.amount);
+    return GameState.upgrades[this.id] >= this.amount;
   }
 }
 
@@ -215,41 +219,39 @@ function createUpgradePanel(upgradeData) {
 function generateManaBars() {
   manaBarsEl.innerHTML = "";
 
-  GameState.manaProgress.forEach((_, i) => {
-    console.log(i)
-    const container = document.createElement("div")
-    container.className = "box"
+  const container = document.createElement("div")
+  container.className = "box"
 
-    const text = document.createElement("h3")
-    text.innerText = "Tier " + toRoman(i+1) + " Core"
-    container.appendChild(text)
+  const text = document.createElement("h3")
+  text.innerText = "Tier " + toRoman(0+1) + " Core"
+  container.appendChild(text)
 
-    const content = document.createElement("div")
+  const content = document.createElement("div")
 
-    const bar = document.createElement("div");
-    bar.className = "mana-bar";
+  const bar = document.createElement("div");
+  bar.className = "mana-bar";
 
-    const fill = document.createElement("div");
-    fill.className = "mana-bar-fill";
-    fill.dataset.index = i;
-    bar.appendChild(fill);
+  const fill = document.createElement("div");
+  fill.className = "mana-bar-fill";
+  fill.dataset.index = 0;
+  bar.appendChild(fill);
 
-    const stats = document.createElement("p");
-    stats.innerText = computeManaCoreAmountMultiplier(i) + " mana";
+  const stats = document.createElement("p");
+  stats.innerText = computeManaCoreAmountMultiplier(0) + " mana";
     
-    content.appendChild(stats);
-    content.appendChild(bar)
+  content.appendChild(stats);
+  content.appendChild(bar)
 
-    container.appendChild(content)
+  container.appendChild(content)
 
-    upgradeUpdateManager.add(() => {
-      console.log("Update received")
-      stats.innerText = computeManaCoreAmountMultiplier(i) + " mana";
-    })
+  upgradeUpdateManager.add(() => {
+    console.log("Update received")
+    stats.innerText = computeManaCoreAmountMultiplier(0) + " mana";
+  })
     
     
-    manaBarsEl.appendChild(container);
-  });
+  manaBarsEl.appendChild(container);
+
 }
 
 function loadSidebar(){
@@ -280,7 +282,7 @@ function generateUpgradeUI() {
     tab.textContent = toRoman(tier.id);
     tab.dataset.tab = tier.id;
     if(index != 0)
-      tab.requirements = `{ \"id\" : \"t${tier.id}_core_research\", \"amount\" : 1}`
+      tab.requirements = `{ \"id\" : \"t${tier.id}_core_create\", \"amount\" : 1}`
     tabsEl.appendChild(tab);
 
     // Create panel
@@ -331,9 +333,11 @@ function generateUpgradeUI() {
     const id = e.target.dataset.tab;
 
     if(e.target.requirements){
-      console.log(e.target.requirements)
-      if(!(new RequirementData(e.target.requirements).Check()))
+      
+      if(!(new RequirementData(e.target.requirements).Check())){
+        console.log("Failed to meet: " + e.target.requirements);
         return;
+      }
     }
 
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("selected"));
@@ -377,7 +381,7 @@ function updateUI(){
 function updateManaBars() {
   document.querySelectorAll(".mana-bar-fill").forEach(fill => {
     const i = fill.dataset.index;
-    const value = GameState.manaProgress[i]; // 0..1
+    const value = GameState.manaProgress; // 0..1
     fill.style.width = `${Math.min(value, 1) * 100}%`;
   });
 }
@@ -386,19 +390,14 @@ function handleTimeDelta(delta){
   const idleSimulationTimestep = 1;
   for(let j = 0; j < delta; j += 1){
     const currentDelta = Math.min(delta - j,idleSimulationTimestep);
-    for(let i = 0; i < GameState.manaProgress.length;i++){
-      const coreUnlockID = `t${i+1}_core_research`;
-      if(i != 0 && GameState.upgrades[coreUnlockID] != 1){
-        continue;
-      }
 
-      GameState.manaProgress[i] += currentDelta * computeManaCoreTimeMultiplier(i)
 
-      if(GameState.manaProgress[i] >= 1){
-        const amount = Math.floor(GameState.manaProgress[i]);
-        GameState.mana += amount * computeManaCoreAmountMultiplier(i);
-        GameState.manaProgress[i] -= amount;
-      }
+    GameState.manaProgress += currentDelta * computeManaCoreTimeMultiplier(0)
+
+    if(GameState.manaProgress >= 1){
+      const amount = Math.floor(GameState.manaProgress);
+      GameState.mana += amount * computeManaCoreAmountMultiplier(0);
+      GameState.manaProgress -= amount;
     }
   }
 }

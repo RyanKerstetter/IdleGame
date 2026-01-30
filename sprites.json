@@ -41,6 +41,10 @@
     },
     {
         "name" : "black_mushroom",
-        "bounds" : {"x": 288, "y":0, "width":32, "height":32}
+        "bounds" : {"x": 320, "y":0, "width":32, "height":32}
+    },
+    {
+        "name" : "powerful_mushroom",
+        "bounds" : {"x": 352, "y":0, "width":32, "height":32}
     }
 ]
